@@ -4,6 +4,10 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const { logger } = require('./middleware/eventLogger');
 const errorHandler = require('./middleware/errorHandler');
+const { subviewsRouter } = require('./routes/subview');
+const { rootRouter } = require('./routes/root');
+const { employeesRouter } = require('./routes/api/employees');
+const corsOptions = require('./config/corsOptions');
 
 const app = express();
 dotenv.config();
@@ -11,26 +15,11 @@ const PORT = process.env.PORT || 3001;
 
 app.use(logger); // Middleware to log requests to the console and a file
 
-// Middleware to enable CORS (Cross-Origin Resource Sharing)
-const whitelist = ['http://127.0.0.1:5500', 'http://localhost:5173'];
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (whitelist.indexOf(origin) !== -1 || !origin) { // Allow requests from the whitelist or no origin (e.g., Postman)
-      callback(null, true); // Allow the request
-    } else {
-      callback(new Error('Access blocked by CORS')); // Block the request
-    }
-  },
-  optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
-};
-app.use(cors(corsOptions));
+app.use(cors(corsOptions)); // Middleware to enable CORS (Cross-Origin Resource Sharing)
 
 // Serve static files from the public folder in the root directory - Mounts the public folder to the root URL
 app.use(express.static(path.join(__dirname, 'public'))); // Middleware to serve static files from the public directory
-
-app.use(express.urlencoded({ extended: false })); // Middleware to parse URL-encoded data (form submissions)
-
-app.use(express.json()); // Middleware to parse JSON data (API requests)
+app.use('/subview', express.static(path.join(__dirname, 'public'))); // Middleware to serve static files from the public directory
 
 /* Serve static files from the 'css' directory - Mounts the 'css' directory to the root URL
 So that you can access files in the 'css' directory directly from the root URL (e.g., http://localhost:3001/style.css)
@@ -39,25 +28,15 @@ This is useful for serving static assets like CSS, JavaScript, images, etc.
 You can also use it to serve files from other directories by changing the path in the join method. */
 // app.use(express.static(path.join(__dirname, 'css')));
 
-const indexRouteRegex = /^\/$|\/index(.html)?/; // '^/$|/index(.html)?' - Matches both '/' and '/index' or '/index.html'
-const newPageRouteRegex = /^\/new-page(.html)?/; // '/new-page(.html)?' - Matches both '/new-page' and '/new-page.html'
+app.use(express.urlencoded({ extended: false })); // Middleware to parse URL-encoded data (form submissions)
 
-// Routes
+app.use(express.json()); // Middleware to parse JSON data (API requests)
 
-app.get(indexRouteRegex, (req, res) => {
-  // res.send('Hello World!');
-  // res.sendFile('./views/index.html', { root: __dirname });
-  // res.sendFile(path.join(__dirname, '/views/index.html'));
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
-});
+// Router routes
 
-app.get(newPageRouteRegex, (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'new-page.html'));
-});
-
-app.get('/old-page', (req, res) => {
-  res.redirect(301, '/new-page'); // 302 - Temporary redirect (by default), 301 - Permanent redirect (saved in browser cache)
-});
+app.use('/', rootRouter);
+app.use('/subview', subviewsRouter);
+app.use('/employees', employeesRouter);
 
 // Route handlers
 
