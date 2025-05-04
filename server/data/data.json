@@ -1,0 +1,30 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "role": "admin"
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "role": "user"
+    }
+  ],
+  "posts": [
+    {
+      "id": 101,
+      "title": "Welcome to the Blog",
+      "content": "This is the first post on the blog.",
+      "authorId": 1
+    },
+    {
+      "id": 102,
+      "title": "React Tips",
+      "content": "Here are some tips for working with React.",
+      "authorId": 2
+    }
+  ]
+}
