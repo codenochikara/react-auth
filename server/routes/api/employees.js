@@ -3,8 +3,7 @@ const router = express.Router();
 const path = require('path');
 const { getAllEmployees, createEmployee, updateEmployee, deleteEmployeeById, getEmployeeById } = require('../../controllers/employeesController');
 
-const data = {};
-data.employees = require('../../model/employees.json');
+// Routes
 
 router.route('/')
   .get(getAllEmployees)

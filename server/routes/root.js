@@ -18,8 +18,4 @@ router.get(newPageRouteRegex, (req, res) => {
   res.sendFile(path.join(__dirname, '../views', 'new-page.html'));
 });
 
-router.get('/old-page', (req, res) => {
-  res.redirect(301, '/new-page'); // 302 - Temporary redirect (by default), 301 - Permanent redirect (saved in browser cache)
-});
-
 module.exports = { rootRouter: router };
