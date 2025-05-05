@@ -1,8 +1,8 @@
-const whitelist = ['http://127.0.0.1:5500', 'http://localhost:5173'];
+const allowedOrigins = require("./allowedOrigins");
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (whitelist.indexOf(origin) !== -1 || !origin) { // Allow requests from the whitelist or no origin (e.g., Postman)
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) { // Allow requests from the whitelist or no origin (e.g., Postman)
       callback(null, true); // Allow the request
     } else {
       callback(new Error('Access blocked by CORS')); // Block the request
