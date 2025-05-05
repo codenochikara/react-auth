@@ -1,0 +1,29 @@
+[
+  {
+    "username": "Shakti",
+    "password": "$2b$10$YiCiOOglUqoLC17WYpBK1./piacOwI72A6IgiBGyA5e1sY6CWx4gi",
+    "roles": {
+      "user": 2309
+    },
+    "refreshToken": ""
+  },
+  {
+    "username": "Chikara",
+    "password": "$2b$10$95aHctA7vRhVQrOnYPVmzuBc879tbit1t3aRCSdczrPNrg4qI2LUu",
+    "roles": {
+      "editor": 2002,
+      "user": 2309
+    },
+    "refreshToken": ""
+  },
+  {
+    "username": "SAP",
+    "password": "$2b$10$YiCiOOglUqoLC17WYpBK1./piacOwI72A6IgiBGyA5e1sY6CWx4gi",
+    "roles": {
+      "admin": 1106,
+      "editor": 2002,
+      "user": 2309
+    },
+    "refreshToken": ""
+  }
+]

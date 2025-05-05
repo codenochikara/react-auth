@@ -3,7 +3,7 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 
 const usersDB = {
-  users: require('../model/users.json'),
+  users: require('../models/users.json'),
   setUsers: function (data) { this.users = data; }
 }
 
@@ -17,9 +17,13 @@ const createUser = async (req, res) => {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
     // Store the new user in the database
-    const newUser = { username, password: hashedPassword };
+    const newUser = {
+      username,
+      password: hashedPassword,
+      roles: { user: 2309 },
+    };
     usersDB.setUsers([...usersDB.users, newUser]);
-    await fsp.writeFile(path.join(__dirname, '..', 'model', 'users.json'), JSON.stringify(usersDB.users));
+    await fsp.writeFile(path.join(__dirname, '..', 'models', 'users.json'), JSON.stringify(usersDB.users));
     res.status(201).json({ "success": `New user ${username} created.` });
   } catch (err) {
     console.error(err);

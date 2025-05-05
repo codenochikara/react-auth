@@ -4,7 +4,7 @@ const fsp = require('fs').promises;
 const path = require('path');
 
 const usersDB = {
-  users: require('../model/users.json'),
+  users: require('../models/users.json'),
   setUsers: function (data) { this.users = data; }
 }
 
@@ -17,11 +17,17 @@ const handleLogin = async (req, res) => {
   // Evaluate password
   const match = await bcrypt.compare(password, foundUser.password);
   if (match) {
+    const roles = Object.values(foundUser.roles);
     // Create JWT token for authentication
     const accessToken = jwt.sign(
-      { "username": foundUser.username },
+      {
+        userInfo: {
+          username: foundUser.username,
+          roles: roles // Hide the role names and only expose the codes
+        }
+      },
       process.env.JWT_ACCESS_TOKEN_SECRET,
-      { expiresIn: '30s' }
+      { expiresIn: '5m' }
     );
     const refreshToken = jwt.sign(
       { "username": foundUser.username },
@@ -36,7 +42,7 @@ const handleLogin = async (req, res) => {
       user.username === foundUser.username ? currentUser : user
     );
     usersDB.setUsers(updatedUsers);
-    await fsp.writeFile(path.join(__dirname, '..', 'model', 'users.json'), JSON.stringify(usersDB.users));
+    await fsp.writeFile(path.join(__dirname, '..', 'models', 'users.json'), JSON.stringify(usersDB.users));
 
     res.cookie('jwt', refreshToken, {
       httpOnly: true,

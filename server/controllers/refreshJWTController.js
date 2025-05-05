@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const usersDB = {
-  users: require('../model/users.json'),
+  users: require('../models/users.json'),
   setUsers: function (data) { this.users = data; }
 }
 
@@ -19,10 +19,16 @@ const handleRefreshJWT = (req, res) => {
   // Evaluate JWT
   jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN_SECRET, (err, decoded) => {
     if (err || foundUser.username !== decoded.username) return res.sendStatus(403); // Forbidden
+    const roles = Object.values(foundUser.roles);
     const accessToken = jwt.sign(
-      { "username": decoded.username },
+      {
+        userInfo: {
+          username: foundUser.username,
+          roles: roles // Hide the role names and only expose the codes
+        }
+      },
       process.env.JWT_ACCESS_TOKEN_SECRET,
-      { expiresIn: '30s' }
+      { expiresIn: '5m' }
     );
     res.json({ accessToken, "success": `Access token re-generated for user ${decoded.username}.` });
   });

@@ -3,7 +3,7 @@ const { set } = require('date-fns/set');
 const path = require('path');
 
 const usersDB = {
-  users: require('../model/users.json'),
+  users: require('../models/users.json'),
   setUsers: function (data) { this.users = data; }
 }
 
@@ -23,7 +23,7 @@ const handleLogout = async (req, res) => {
   // Delete refresh token from the database
   const currentUser = { ...foundUser, refreshToken: '' }; // Clear refresh token
   usersDB.setUsers(usersDB.users.map((user) => (user.username === foundUser.username ? currentUser : user)));
-  await fsp.writeFile(path.join(__dirname, '..', 'model', 'users.json'), JSON.stringify(usersDB.users));
+  await fsp.writeFile(path.join(__dirname, '..', 'models', 'users.json'), JSON.stringify(usersDB.users));
 
   // Clear the cookie with the refresh token
   res.clearCookie('jwt', { httpOnly: true, sameSite: 'None' });
