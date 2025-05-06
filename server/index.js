@@ -3,6 +3,8 @@ const path = require('path');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+const connectMongoDB = require('./config/mongoDBConnection');
 const verifyJWT = require('./middleware/verifyJWT');
 const { logger } = require('./middleware/eventLogger');
 const credentials = require('./middleware/credentials');
@@ -18,6 +20,9 @@ const { logoutRouter } = require('./routes/logout');
 const app = express();
 dotenv.config();
 const PORT = process.env.PORT || 3001;
+
+// Connect to MongoDB
+connectMongoDB();
 
 app.use(logger); // Middleware to log requests to the console and a file
 
@@ -59,6 +64,9 @@ app.all('*splat', (req, res) => {
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`✅ Server is running on http://localhost:${PORT}`);
+mongoose.connection.once('open', () => {
+  // console.log('✅ Connected to MongoDB database');
+  app.listen(PORT, () => {
+    console.log(`✅ Server is running on 🌐 http://localhost:${PORT}`);
+  });
 });

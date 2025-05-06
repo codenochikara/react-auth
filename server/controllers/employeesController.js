@@ -1,95 +1,99 @@
-const { v4: uuid } = require('uuid');
+const EmployeeModel = require('../models/Employee');
 
-const data = {
-  employees: require('../models/employees.json'),
-  setEmployees: function (data) {
-    this.employees = data;
+// Controller functions
+
+const getAllEmployees = async (req, res) => {
+  const employees = await EmployeeModel.find().lean();
+  if (!employees || !employees.length) {
+    return res.status(404).json({ "message": 'No employees found.' }); // Can also use res.sendStatus(204) for no content
   }
-};
-
-const getAllEmployees = (req, res) => {
-  res.json(data.employees);
+  res.json(employees);
 }
 
-const createEmployee = (req, res) => {
-  // const newEmployee = req.body;
-  const newEmployee = {
-    // "id": data.employees[data.employees.length - 1].id + 1 || 1,
-    "id": uuid(),
-    "name": req.body.name,
-    "email": req.body.email
-  };
-
-  if (!newEmployee.name || !newEmployee.email) {
-    return res.status(400).json({ "message": 'Name and email are required.' });
+const createEmployee = async (req, res) => {
+  if (!req?.body?.name || !req?.body?.email) {
+    return res.status(400).json({ message: 'Name and email are required.' });
   }
 
-  // data.employees.push(newEmployee);
-  data.setEmployees([...data.employees, newEmployee]);
-  res.status(201).json(data.employees);
-  // res.status(201).json(newEmployee);
-  /* res.json({
-    "id": req.body.id,
-    "name": req.body.name,
-    "email": req.body.email
-  }); */
+  try {
+    const newEmployee = await EmployeeModel.create({
+      name: req.body.name,
+      email: req.body.email
+    });
+
+    // res.status(201).json(newEmployee);
+
+    // Fetch the updated collection of employees
+    const employees = await EmployeeModel.find().lean();
+
+    // Return the newly created employee and the entire collection
+    res.status(201).json({
+      message: 'Employee created successfully.',
+      newEmployee,
+      employees
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
 }
 
-const updateEmployee = (req, res) => {
-  /* const updatedEmployee = req.body;
-  const index = data.employees.findIndex(emp => emp.id === updatedEmployee.id);
-  if (index !== -1) {
-    data.employees[index] = updatedEmployee;
-    res.json(updatedEmployee);
-  } else {
-    res.status(404).json({ message: 'Employee not found' });
+const updateEmployee = async (req, res) => {
+  if (!req?.body?.id || (!req?.body?.name && !req?.body?.email)) {
+    return res.status(400).json({ message: 'Employee ID and one other param required to update an employee.' });
+  }
+
+  const foundEmployee = await EmployeeModel.findOne({ _id: req.body.id });
+  if (!foundEmployee) {
+    return res.status(404).json({ "message": `No employee found matching ID ${req.body.id}.` });
+  }
+
+  if (req.body?.name) foundEmployee.name = req.body.name;
+  if (req.body?.email) foundEmployee.email = req.body.email;
+
+  await foundEmployee.save();
+  const allEmployees = await EmployeeModel.find().lean();
+
+  res.status(201).json({
+    message: `Employee with the ID ${req.body.id} updated successfully.`,
+    updatedEmployee: foundEmployee,
+    allEmployees
+  });
+}
+
+const deleteEmployeeById = async (req, res) => {
+  if (!req?.body?.id) {
+    return res.status(400).json({ message: 'Employee ID required.' });
+  }
+
+  // Avoid unnecessary database query and rely on the result of deleteOne
+  /* const employeeToDelete = await EmployeeModel.findOne({ _id: req.body.id });
+  if (!employeeToDelete) {
+    return res.status(404).json({ "message": `No employee found matching ID ${req.body.id}.` });
   } */
-  /* res.json({
-    "id": req.body.id,
-    "name": req.body.name,
-    "email": req.body.email
-  }); */
-  const employee = data.employees.find(emp => emp.id === req.body.id);
-  if (!employee) {
-    return res.status(400).json({ "message": `Employee ID ${req.body.id} not found.` });
+  // const result = await employeeToDelete.deleteOne(); // Returns the deleted document
+
+  const result = await EmployeeModel.deleteOne({ _id: req.body.id }); // Returns the result of the deletion operation
+  if (result.deletedCount === 0) {
+    // If no document was deleted (i.e., no matching id)
+    return res.status(404).json({ message: `No employee found matching ID ${req.body.id}.` });
   }
-  if (req.body.name) employee.name = req.body.name;
-  if (req.body.email) employee.email = req.body.email;
-  const filteredArray = data.employees.filter(emp => emp.id !== req.body.id);
-  const unsortedArray = [...filteredArray, employee];
-  data.setEmployees(unsortedArray.sort((a, b) => a.id > b.id ? 1 : a.id < b.id ? -1 : 0));
-  res.json(data.employees);
+  const allEmployees = await EmployeeModel.find().lean();
+
+  res.status(201).json({
+    message: `Employee with the ID ${req.body.id} deleted successfully.`,
+    result,
+    // deletedEmployee: employeeToDelete,
+    allEmployees
+  });
 }
 
-const deleteEmployeeById = (req, res) => {
-  /* const employeeId = parseInt(req.body.id);
-  const index = data.employees.findIndex(emp => emp.id === employeeId);
-  if (index !== -1) {
-    data.employees.splice(index, 1);
-    res.status(204).end();
-  } else {
-    res.status(404).json({ message: 'Employee not found' });
-  } */
-  // res.json({ "id": req.body.id });
-  const employee = data.employees.find(emp => emp.id === req.body.id);
-  if (!employee) {
-    return res.status(400).json({ "message": `Employee ID ${req.body.id} not found.` });
+const getEmployeeById = async (req, res) => {
+  if (!req?.params?.id) {
+    return res.status(400).json({ "message": 'Employee ID required.' });
   }
-  const filteredArray = data.employees.filter(emp => emp.id !== req.body.id);
-  data.setEmployees([...filteredArray]);
-  res.json(data.employees);
-}
 
-const getEmployeeById = (req, res) => {
-  /* const employeeId = parseInt(req.params.id, 10);
-  const employee = data.employees.find(emp => emp.id === employeeId);
-  if (employee) {
-    res.json(employee);
-  } else {
-    res.status(404).json({ message: 'Employee not found' });
-  } */
-  // res.json({ "id": req.params.id });
-  const employee = data.employees.find(emp => emp.id === req.params.id);
+  const employee = await EmployeeModel.findById(req.params.id).lean();
   if (!employee) {
     return res.status(400).json({ "message": `Employee ID ${req.params.id} not found.` });
   }

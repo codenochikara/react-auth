@@ -1,11 +1,7 @@
 const jwt = require('jsonwebtoken');
+const UserModel = require('../models/User');
 
-const usersDB = {
-  users: require('../models/users.json'),
-  setUsers: function (data) { this.users = data; }
-}
-
-const handleRefreshJWT = (req, res) => {
+const handleRefreshJWT = async (req, res) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) return res.sendStatus(401);
 
@@ -13,7 +9,7 @@ const handleRefreshJWT = (req, res) => {
   console.log(cookies.jwt);
 
   // Check if refresh token is in the database
-  const foundUser = usersDB.users.find(user => user.refreshToken === refreshToken);
+  const foundUser = await UserModel.findOne({ refreshToken });
   if (!foundUser) return res.sendStatus(401); // Unauthorized
 
   // Evaluate JWT

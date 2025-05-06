@@ -1,11 +1,4 @@
-const fsp = require('fs').promises;
-const { set } = require('date-fns/set');
-const path = require('path');
-
-const usersDB = {
-  users: require('../models/users.json'),
-  setUsers: function (data) { this.users = data; }
-}
+const UserModel = require('../models/User');
 
 const handleLogout = async (req, res) => {
   // Clear the cookie with the refresh token - on client, also clear the access token
@@ -14,16 +7,20 @@ const handleLogout = async (req, res) => {
   const refreshToken = cookies.jwt;
 
   // Check if refresh token is with some user in the database
-  const foundUser = usersDB.users.find(user => user.refreshToken === refreshToken);
+  const foundUser = await UserModel.findOne({ refreshToken }).exec();
   if (!foundUser) {
     res.clearCookie('jwt', { httpOnly: true, sameSite: 'None' }); // Secure: true - only for HTTPS
     return res.sendStatus(204);
   }
 
-  // Delete refresh token from the database
-  const currentUser = { ...foundUser, refreshToken: '' }; // Clear refresh token
-  usersDB.setUsers(usersDB.users.map((user) => (user.username === foundUser.username ? currentUser : user)));
-  await fsp.writeFile(path.join(__dirname, '..', 'models', 'users.json'), JSON.stringify(usersDB.users));
+  // Delete the user's refresh token from the database
+
+  // const currentUser = { ...foundUser, refreshToken: '' }; // Clear refresh token
+  // await UserModel.findByIdAndUpdate(foundUser._id, currentUser, { new: true }).exec();
+  // await foundUser.updateOne({ refreshToken: '' }); // Update the user in the database to remove the refresh token
+
+  foundUser.refreshToken = ''; // Update the foundUser document
+  await foundUser.save(); // Save the updated user to the database
 
   // Clear the cookie with the refresh token
   res.clearCookie('jwt', { httpOnly: true, sameSite: 'None' });
