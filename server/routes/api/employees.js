@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
 const { getAllEmployees, createEmployee, updateEmployee, deleteEmployeeById, getEmployeeById } = require('../../controllers/employeesController');
 const ROLES_LIST = require('../../utils/constants/rolesList');
 const verifyRoles = require('../../middleware/verifyRoles');

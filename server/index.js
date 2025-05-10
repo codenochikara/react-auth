@@ -12,6 +12,7 @@ const errorHandler = require('./middleware/errorHandler');
 const corsOptions = require('./config/corsOptions');
 const { rootRouter } = require('./routes/root');
 const { employeesRouter } = require('./routes/api/employees');
+const { usersRouter } = require('./routes/api/users');
 const { registerRouter } = require('./routes/register');
 const { authRouter } = require('./routes/auth');
 const { refreshRouter } = require('./routes/refresh');
@@ -48,6 +49,7 @@ app.use('/refresh', refreshRouter);
 app.use('/logout', logoutRouter);
 app.use(verifyJWT); // Middleware to verify JWT tokens for protected routes
 app.use('/employees', employeesRouter);
+app.use('/users', usersRouter);
 
 // Universal route handler for all other routes
 
