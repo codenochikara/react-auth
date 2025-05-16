@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { FaCircleCheck, FaCircleInfo, FaCircleXmark } from "react-icons/fa6";
 import axios from '../api/axios';
-import { FaCircleXmark, FaCircleInfo, FaCircleCheck } from "react-icons/fa6";
 import { REGISTER_URL } from '../utils/constants/apiUrls';
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
@@ -45,7 +45,7 @@ const Register = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // If button enabled with JS hack
+    // If button is enabled with HTML inspect
     const v1 = USER_REGEX.test(user);
     const v2 = PWD_REGEX.test(password);
     if (!v1 || !v2) {
@@ -66,7 +66,7 @@ const Register = () => {
           withCredentials: true
         }
       );
-      console.log(JSON.stringify(res));
+      console.log(JSON.stringify(res.data));
       setSuccess(true);
     } catch (err) {
       if (!err?.response) {
@@ -94,14 +94,14 @@ const Register = () => {
           <p ref={errRef} className={errMsg ? 'errmsg flex-align-center' : 'offscreen'} aria-live='assertive' role='alert'>{errMsg}</p>
           <h1>Register</h1>
           <form onSubmit={handleSubmit}>
-            <label htmlFor="username">
+            <label htmlFor="username-register">
               Username:
               <FaCircleCheck className={validUsername ? "valid" : "hide"} />
               <FaCircleXmark className={validUsername || !user ? "hide" : "invalid"} />
             </label>
             <input
               type="text"
-              id="username"
+              id="username-register"
               ref={userRef}
               autoComplete="off"
               onChange={(e) => setUser(e.target.value)}
@@ -119,14 +119,14 @@ const Register = () => {
               Letters, numbers, underscores, hyphens allowed.
             </p>
 
-            <label htmlFor="password">
+            <label htmlFor="password-register">
               Password:
               <FaCircleCheck className={validPassword ? "valid" : "hide"} />
               <FaCircleXmark className={validPassword || !password ? "hide" : "invalid"} />
             </label>
             <input
               type="password"
-              id="password"
+              id="password-register"
               onChange={(e) => setPassword(e.target.value)}
               value={password}
               required

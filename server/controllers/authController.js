@@ -13,7 +13,7 @@ const handleLogin = async (req, res) => {
   // Evaluate password
   const match = await bcrypt.compare(password, foundUser.password);
   if (match) {
-    const roles = Object.values(foundUser.roles);
+    const roles = Object.values(foundUser.roles).filter(Boolean);
     // Create JWT token for authentication
     const accessToken = jwt.sign(
       {
@@ -41,7 +41,7 @@ const handleLogin = async (req, res) => {
       // secure: true, // Ensures that the cookie is only sent over HTTPS connections
       maxAge: 24 * 60 * 60 * 1000 // 1 day
     });
-    res.json({ accessToken, "success": `User ${username} is logged in.` });
+    res.json({ roles, accessToken, "success": `User ${username} is logged in.` });
   } else {
     res.sendStatus(401); // Unauthorized
   }
