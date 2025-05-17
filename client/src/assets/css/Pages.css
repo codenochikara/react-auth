@@ -1,0 +1,35 @@
+section.page-section {
+  width: 100%;
+  max-width: 50%;
+  /* min-height: fit-content; */
+  padding: 2rem;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+}
+
+.role-badge {
+  /* display: inline-flex !important; */
+  color: black;
+  font-size: smaller;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+
+  &.admin {
+    background-color: #ffccff;
+  }
+
+  &.editor {
+    background-color: #ccffff;
+  }
+
+  &.user {
+    background-color: #ccccff;
+  }
+
+  &.home {
+    background-color: #ffffcc;
+    /* backdrop-filter: blur(8px);
+    border: 1px solid #ffcc00; */
+  }
+}

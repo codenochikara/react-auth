@@ -1,0 +1,36 @@
+.tabs {
+  /* border: 1px solid #646cff; */
+  /* gap: 1rem !important; */
+  max-width: 30% !important;
+  padding: 1rem !important;
+
+  .tab-list {
+    background-color: #242424;
+    padding: 0.5rem;
+    border-radius: 8px;
+
+    .tab {
+      flex-grow: 1;
+      font-weight: 500;
+      padding: 0.25rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.4s ease;
+
+      &.selected {
+        background-color: #646cff;
+      }
+
+      &:not(.selected):hover {
+        outline: 1px solid #535bf2;
+      }
+    }
+  }
+
+  .tab-panel {
+    section {
+      min-width: 100%;
+      max-width: 100%;
+    }
+  }
+}

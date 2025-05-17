@@ -90,9 +90,9 @@ const Register = () => {
           </p>
         </section>
       ) : (
-        <section className='form-container'>
+        <section className='form-section'>
           <p ref={errRef} className={errMsg ? 'errmsg flex-align-center' : 'offscreen'} aria-live='assertive' role='alert'>{errMsg}</p>
-          <h1>Register</h1>
+          <h2>Register</h2>
           <form onSubmit={handleSubmit}>
             <label htmlFor="username-register">
               Username:

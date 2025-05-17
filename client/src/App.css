@@ -1,10 +1,15 @@
+header {
+  height: 100%;
+  width: 100%;
+}
+
 main {
   height: 100%;
   width: 100%;
   margin: 5rem 0;
 }
 
-section.form-container {
+section.form-section {
   width: 100%;
   max-width: 30%;
   /* min-height: fit-content; */

@@ -1,0 +1,19 @@
+import { FaHouse } from "react-icons/fa6";
+import RoleBadge from "../components/RoleBadge";
+
+const Home = () => {
+  return (
+    <section className='page-section flex-column-center gap-1rem'>
+      <div className='flex-center gap-1rem'>
+        <h2>Home</h2>
+        <RoleBadge role='home'>
+          <FaHouse />
+          HOME
+        </RoleBadge>
+      </div>
+      <p>Home sweet home! ♥️</p>
+    </section>
+  )
+}
+
+export default Home;
