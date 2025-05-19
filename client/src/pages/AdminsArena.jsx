@@ -1,5 +1,4 @@
 import { FaUserShield } from 'react-icons/fa6';
-import '../assets/css/Pages.css';
 import RoleBadge from '../components/RoleBadge';
 
 const AdminsArena = () => {

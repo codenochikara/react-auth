@@ -6,8 +6,7 @@ const Home = () => {
     <section className='page-section flex-column-center gap-1rem'>
       <div className='flex-center gap-1rem'>
         <h2>Home</h2>
-        <RoleBadge role='home'>
-          <FaHouse />
+        <RoleBadge role='home' icon={<FaHouse />}>
           HOME
         </RoleBadge>
       </div>

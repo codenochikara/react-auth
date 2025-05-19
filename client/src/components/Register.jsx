@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { FaCircleCheck, FaCircleInfo, FaCircleXmark } from "react-icons/fa6";
+import { Link } from 'react-router-dom';
 import axios from '../api/axios';
 import { REGISTER_URL } from '../utils/constants/apiUrls';
 
@@ -84,9 +85,9 @@ const Register = () => {
     <>
       {success ? (
         <section>
-          <h1>Successfully registered!</h1>
+          <h2>Successfully registered!</h2>
           <p>
-            <a href="#">Sign In</a>
+            <Link to='/auth/login'>Sign In</Link>
           </p>
         </section>
       ) : (
@@ -175,7 +176,7 @@ const Register = () => {
           <p>
             Already registered?<br />
             <span className="line">
-              <a href="#">Sign In</a>
+              <Link to='/auth/login'>Sign In</Link>
             </span>
           </p>
         </section >

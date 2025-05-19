@@ -32,4 +32,8 @@ section.page-section {
     /* backdrop-filter: blur(8px);
     border: 1px solid #ffcc00; */
   }
+
+  &.other {
+    background-color: #ffcccc;
+  }
 }

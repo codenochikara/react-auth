@@ -1,16 +1,22 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from '../api/axios';
-import AuthContext from '../context/AuthProvider';
+// import AuthContext from '../context/AuthProvider';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
 import { LOGIN_URL } from '../utils/constants/apiUrls';
 
 const Login = () => {
-  const { setAuth } = useContext(AuthContext);
+  // const { setAuth } = useContext(AuthContext);
+  const { setAuth } = useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const [errMsg, setErrMsg] = useState('');
-  const [success, setSuccess] = useState(false);
 
   const usernameRef = useRef();
   const errRef = useRef();
@@ -52,7 +58,7 @@ const Login = () => {
       // Clear the input fields
       setUsername('');
       setPassword('');
-      setSuccess(true);
+      navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {
         setErrMsg('No Server Response');
@@ -68,58 +74,47 @@ const Login = () => {
   }
 
   return (
-    <>
-      {success ? (
-        <section>
-          <h1>Successfully logged in!</h1>
-          <p>
-            <a href="#">Home</a>
-          </p>
-        </section>
-      ) : (
-        <section className='form-section'>
-          <p ref={errRef} className={errMsg ? 'errmsg flex-align-center' : 'offscreen'} aria-live='assertive' role='alert'>{errMsg}</p>
-          <h2>Login</h2>
-          <form onSubmit={handleSubmit}>
-            <label htmlFor="username-login">Username:</label>
-            <input
-              type="text"
-              id="username-login"
-              name="username"
-              ref={usernameRef}
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              autoComplete="on"
-            />
+    <section className='form-section'>
+      <p ref={errRef} className={errMsg ? 'errmsg flex-align-center' : 'offscreen'} aria-live='assertive' role='alert'>{errMsg}</p>
+      <h2>Login</h2>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="username-login">Username:</label>
+        <input
+          type="text"
+          id="username-login"
+          name="username"
+          ref={usernameRef}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+          autoComplete="on"
+        />
 
-            <label htmlFor="password-login">Password:</label>
-            <input
-              type="password"
-              id="password-login"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete='new-password'
-            />
+        <label htmlFor="password-login">Password:</label>
+        <input
+          type="password"
+          id="password-login"
+          name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          autoComplete='new-password'
+        />
 
-            <button
-              className='register-button'
-              disabled={!username || !password}
-            >
-              Log In
-            </button>
-          </form>
-          <p>
-            Not registered?<br />
-            <span className="line">
-              <a href="#">Sign Up</a>
-            </span>
-          </p>
-        </section >
-      )}
-    </>
+        <button
+          className='register-button'
+          disabled={!username || !password}
+        >
+          Log In
+        </button>
+      </form>
+      <p>
+        Not registered?<br />
+        <span className="line">
+          <Link to='/auth/register'>Sign Up</Link>
+        </span>
+      </p>
+    </section >
   );
 }
 

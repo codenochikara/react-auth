@@ -5,16 +5,6 @@ import Tabs from "../components/Tabs/Tabs";
 
 const tabsConfig = [
   {
-    id: 'register',
-    label: (
-      <>
-        <FaUserPlus />
-        Register
-      </>
-    ),
-    content: <Register />
-  },
-  {
     id: 'login',
     label: (
       <>
@@ -22,7 +12,17 @@ const tabsConfig = [
         Login
       </>
     ),
-    content: <Login />
+    tabPanel: <Login />
+  },
+  {
+    id: 'register',
+    label: (
+      <>
+        <FaUserPlus />
+        Register
+      </>
+    ),
+    tabPanel: <Register />
   }
 ];
 

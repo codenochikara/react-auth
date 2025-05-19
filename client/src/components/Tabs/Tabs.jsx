@@ -73,7 +73,7 @@ const Tabs = ({ tabs = [], className }) => {
           hidden={activeIndex !== index}
           className='tab-panel'
         >
-          {typeof tab.content === 'function' ? tab.content() : tab.content}
+          {typeof tab.tabPanel === 'function' ? tab.tabPanel() : tab.tabPanel}
         </div>
       ))}
     </section>
