@@ -28,9 +28,7 @@ const tabsConfig = [
 
 const Auth = () => {
   return (
-    <>
-      <Tabs tabs={tabsConfig} />
-    </>
+    <Tabs tabs={tabsConfig} />
   )
 }
 

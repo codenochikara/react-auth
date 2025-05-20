@@ -4,7 +4,7 @@ import RoleBadge from '../components/RoleBadge';
 const AdminsArena = () => {
   return (
     <section className='page-section flex-column-center gap-1rem'>
-      <div className='flex-center gap-1rem'>
+      <div className='flex-center gap-1rem flex-wrap'>
         <h2>Admins' Arena</h2>
         <RoleBadge role='admin'>
           <FaUserShield />

@@ -1,4 +1,5 @@
-import { FaHouse, FaReact, FaRegCircleUser, FaUser, FaUserPen, FaUserShield, FaUserXmark } from 'react-icons/fa6';
+import { useState } from 'react';
+import { FaBars, FaHouse, FaReact, FaRegCircleUser, FaUser, FaUserPen, FaUserShield, FaUserXmark, FaXmark } from 'react-icons/fa6';
 import { Link, useNavigate } from 'react-router-dom';
 import '../assets/css/Navbar.css';
 import useAuth from '../hooks/useAuth';
@@ -6,6 +7,8 @@ import rolesMap from '../utils/constants/rolesMap';
 import RoleBadge from './RoleBadge';
 
 const Navbar = () => {
+  const [showMenu, setShowMenu] = useState(false);
+
   const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
 
@@ -55,39 +58,44 @@ const Navbar = () => {
     });
   }
 
+  const isActiveLink = (path) => location.pathname === path;
+
   return (
     <>
-      <div className='navbar-logo flex-center gap-10px'>
+      <div className='navbar-menu-logo-container flex-center gap-10px'>
+        <button className='navbar-menu-button flex-align-center' onClick={() => setShowMenu(prev => !prev)}>
+          {showMenu ? <FaXmark /> : <FaBars />}
+        </button>
         <FaReact style={{ color: '#646cff', fontSize: '2rem', strokeWidth: '8px' }} />
         <h1 className="navbar-title">React Auth</h1>
       </div>
-      <ul className="navbar-links">
-        <li>
+      <ul className={!showMenu ? 'navbar-links' : 'menu-links'}>
+        <li className={`nav-link-item ${isActiveLink('/') ? 'active' : ''}`}>
           <Link to='/'>Home</Link>
           <RoleBadge role='home' icon={<FaHouse />} />
         </li>
-        <li>
+        <li className={`nav-link-item ${isActiveLink('/users-utopia') ? 'active' : ''}`}>
           <Link to='/users-utopia'>Users' Utopia</Link>
           <RoleBadge role='user' icon={<FaUser />} />
         </li>
         {auth?.username && auth?.accessToken &&
           <>
-            <li>
+            <li className={`nav-link-item ${isActiveLink('/editors-estate') ? 'active' : ''}`}>
               <Link to='/editors-estate'>Editors' Estate</Link>
               <RoleBadge role='editor' icon={<FaUserPen />} />
             </li>
-            <li>
+            <li className={`nav-link-item ${isActiveLink('/admins-arena') ? 'active' : ''}`}>
               <Link to='/admins-arena'>Admins' Arena</Link>
               <RoleBadge role='admin' icon={<FaUserShield />} />
             </li>
-            <li>
+            <li className={`nav-link-item ${isActiveLink('/lounge') ? 'active' : ''}`}>
               <Link to='/lounge'>Lounge</Link>
               <RoleBadge role='admin' icon={<FaUserShield />} />
               <RoleBadge role='editor' icon={<FaUserPen />} />
             </li>
           </>}
       </ul>
-      <div className="navbar-auth flex-center gap-1rem">
+      <div className="navbar-auth flex-center gap-1rem flex-wrap">
         {!auth?.username ? (
           <button className="navbar-auth-button flex-center gap-10px" onClick={handleLoginRegister}>
             <FaRegCircleUser />

@@ -5,7 +5,7 @@ const NavLayout = () => {
   return (
     <>
       <header>
-        <nav className="navbar flex-align-center flex-wrap">
+        <nav className="navbar flex-align-center gap-1rem flex-wrap">
           <Navbar />
         </nav>
       </header>

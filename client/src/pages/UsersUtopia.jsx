@@ -4,7 +4,7 @@ import RoleBadge from '../components/RoleBadge';
 const UsersUtopia = () => {
   return (
     <section className='page-section flex-column-center gap-1rem'>
-      <div className='flex-center gap-1rem'>
+      <div className='flex-center gap-1rem flex-wrap'>
         <h2>Users' Utopia</h2>
         <RoleBadge role='user'>
           <FaUser />
