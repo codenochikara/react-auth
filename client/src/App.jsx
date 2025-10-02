@@ -35,7 +35,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path='unauthorized' element={<Unauthorized />} />
           {/* Protected routes */}
-          {/* If the allowedRoles prop is not passes, no role will be authorized to access the route */}
+          {/* If the allowedRoles prop is not passed, no role will be authorized to access the route */}
           <Route element={<RequireAuth allowedRoles={[roleCodes.user]} />}>
             {/* <Route index element={<Home />} /> */}
             <Route path='/users-utopia' element={<UsersUtopia />} />
